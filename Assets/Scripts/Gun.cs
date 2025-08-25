@@ -4,6 +4,35 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+	public enum State
+	{
+		Ready,
+		Empty,
+		Reloading,
+	}
+
+	private State currentState = State.Ready;
+
+	public State CurrentState
+	{
+		get { return currentState; }
+		private set
+		{
+			currentState = value;
+			switch (currentState)
+			{
+				case State.Ready:
+					break;
+				case State.Empty:
+					break;
+				case State.Reloading:
+					break;
+			}
+		}
+	}
+
+	public GunData gunData;
+
 	public ParticleSystem muzzleEffect;
 	public ParticleSystem shellEffect;
 
@@ -11,6 +40,11 @@ public class Gun : MonoBehaviour
 	private AudioSource audioSource;
 
 	public Transform firePosition;
+
+	private int ammoRemain;
+	private int magAmmo;
+
+	private float lastFireTime;
 
 	private void Awake()
 	{
@@ -21,28 +55,123 @@ public class Gun : MonoBehaviour
 		lineRenderer.positionCount = 2;
 	}
 
+	private void OnEnable()
+	{
+		ammoRemain = gunData.startAmmoRemain;
+		magAmmo = gunData.magCapacity;
+
+		lastFireTime = 0;
+
+		currentState = State.Ready;
+	}
+
 	private void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Space))
+		switch (currentState)
 		{
-			StartCoroutine(CoShotEffect());
+			case State.Ready:
+				UpdateReady(); 
+				break;
+			case State.Empty:
+				UpdateEmpty(); 
+				break;
+			case State.Reloading:
+				UpdateReload(); 
+				break;
 		}
 	}
 
-	private IEnumerator CoShotEffect()
+	private void UpdateReady()
 	{
+	}
+
+	private void UpdateEmpty()
+	{
+
+	}
+
+	private void UpdateReload()
+	{
+
+	}
+
+	private IEnumerator CoShotEffect(Vector3 hitPosition)
+	{
+		audioSource.PlayOneShot(gunData.shootClip);
+
 		muzzleEffect.Play();
 		shellEffect.Play();
 
 		lineRenderer.enabled = true;
 		lineRenderer.SetPosition(0, firePosition.position);
-		Vector3 endPos = firePosition.position + firePosition.forward * 10f;
-		lineRenderer.SetPosition(1, endPos);
+		lineRenderer.SetPosition(1, hitPosition);
 
 		yield return new WaitForSeconds(0.2f);
 
 		lineRenderer.enabled = false;
+	}
 
-		
+	private IEnumerator CoReloadEffect()
+	{
+		audioSource.PlayOneShot(gunData.reloadClip);
+
+		currentState = State.Reloading;
+
+		yield return new WaitForSeconds(gunData.reloadTime);
+
+		int temp = magAmmo;
+		magAmmo = Mathf.Min(magAmmo + ammoRemain, gunData.magCapacity);
+		ammoRemain = ammoRemain - (magAmmo - temp);
+
+		currentState = State.Ready;
+	}
+
+	public void Fire()
+	{
+		if (currentState == State.Ready && Time.time > (lastFireTime + gunData.timeBetFire))
+		{
+			lastFireTime = Time.time;
+
+			Shoot();
+		}
+	}
+
+	public void Shoot()
+	{
+		Vector3 hitPosition = Vector3.zero;
+
+		RaycastHit hit;
+		if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, gunData.fireDistance))
+		{
+			hitPosition = hit.point;
+
+			var target = hit.collider.GetComponent<IDamagable>();
+			if (target != null)
+			{
+				target.OnDamage(gunData.damage, hit.point, hit.normal);
+			}
+		}
+		else
+		{
+			hitPosition = firePosition.position + firePosition.forward * gunData.fireDistance;
+		}
+
+		StartCoroutine(CoShotEffect(hitPosition));
+
+		--magAmmo;
+		if(magAmmo <= 0)
+		{
+			currentState = State.Empty;
+		}
+	}
+
+	public bool Reload()
+	{
+		if (ammoRemain == 0 || currentState == State.Reloading)
+			return false;
+
+		StartCoroutine(CoReloadEffect());
+
+		return true;
 	}
 }

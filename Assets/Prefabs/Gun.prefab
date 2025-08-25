@@ -694,6 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0937bced04663e488e7831686c03e69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gunData: {fileID: 11400000, guid: c25ffcca32a37e64ea766c632ebe6269, type: 2}
   muzzleEffect: {fileID: 6916417492804102453}
   shellEffect: {fileID: 2916330466065789031}
   firePosition: {fileID: 4959168996130380}
