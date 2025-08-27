@@ -5,8 +5,8 @@ public class LivingEntity : MonoBehaviour, IDamagable
 {
 	public float MaxHealth = 100f;
 
-	public float Health { get; set; }
-	public bool IsDead { get; set; }
+	public float Health { get; private set; }
+	public bool IsDead { get; private set; }
 
 	public event Action OnDeath;
 
@@ -16,7 +16,7 @@ public class LivingEntity : MonoBehaviour, IDamagable
 		Health = MaxHealth;
 	}
 
-	public void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
+	public virtual void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
 	{
 		Health -= damage;
 
@@ -26,10 +26,17 @@ public class LivingEntity : MonoBehaviour, IDamagable
 		}
 	}
 
+	public virtual void AddHealth(float healthUp)
+	{
+		Health = Mathf.Min(Health + healthUp, MaxHealth);
+	}
+
 	public virtual void Die()
 	{
-		if(OnDeath != null)
+		if (OnDeath != null)
+		{
 			OnDeath();
+		}
 		IsDead = true;
 	}
 }

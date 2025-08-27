@@ -42,7 +42,10 @@ public class Gun : MonoBehaviour
 	public Transform firePosition;
 
 	private int ammoRemain;
+	public int AmmoRemain => ammoRemain;
+
 	private int magAmmo;
+	public int MagAmmo => magAmmo;
 
 	private float lastFireTime;
 
@@ -173,5 +176,10 @@ public class Gun : MonoBehaviour
 		StartCoroutine(CoReloadEffect());
 
 		return true;
+	}
+
+	public void AddAmmoRemain(int ammo)
+	{
+		ammoRemain = Mathf.Min(ammoRemain + ammo, gunData.ammoMaxCapacity);
 	}
 }

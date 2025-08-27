@@ -10,6 +10,7 @@ public class GunData : ScriptableObject
 
     public int startAmmoRemain = 10;
     public int magCapacity = 20;
+    public int ammoMaxCapacity = 100;
 
     public float timeBetFire = 0.12f;
     public float reloadTime = 1.0f;

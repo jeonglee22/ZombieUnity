@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-	private static readonly int hashMove = Animator.StringToHash("Move");
-
 	private PlayerInput input;
 	private Rigidbody rb;
 	private Animator animator;
@@ -26,6 +24,6 @@ public class PlayerMovement : MonoBehaviour
 		var delta =  input.Move * moveSpeed * Time.deltaTime;
 		rb.MovePosition(transform.position + transform.forward * delta);
 
-		animator.SetFloat(hashMove, input.Move);
+		animator.SetFloat(Defines.hashMove, input.Move);
 	}
 }

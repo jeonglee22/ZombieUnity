@@ -2,12 +2,18 @@ using UnityEngine;
 
 public class PlayerShooter : MonoBehaviour
 {
-	public static readonly int idReload = Animator.StringToHash("Reload");
-
     public Gun gun;
+	private Vector3 gunInitPos;
+	private Quaternion gunInitRot;
+
+	private Rigidbody gunRb;
+	private Collider gunCollider;
 
     private PlayerInput input;
 	private Animator animator;
+	private AudioSource audioSource;
+
+	public AudioClip itemPickupClip;
 
 	public Transform gunPivot;
 	public Transform leftHandMount;
@@ -17,6 +23,30 @@ public class PlayerShooter : MonoBehaviour
 	{
 		input = GetComponent<PlayerInput>();
 		animator = GetComponent<Animator>();
+		audioSource = GetComponent<AudioSource>();
+
+		gunRb = gun.GetComponent<Rigidbody>();
+		gunCollider = gun.GetComponent<Collider>();
+
+		gunInitPos = gun.transform.localPosition;
+		gunInitRot = gun.transform.localRotation;
+	}
+
+	private void OnEnable()
+	{
+		gunRb.linearVelocity = Vector3.zero;
+		gunRb.angularVelocity = Vector3.zero;
+		gun.transform.localPosition = gunInitPos;
+		gun.transform.localRotation = gunInitRot;
+
+		gunRb.isKinematic = true;
+		gunCollider.enabled = false;
+	}
+
+	private void OnDisable()
+	{
+		gunRb.isKinematic = false;
+		gunCollider.enabled = true;
 	}
 
 	private void Update()
@@ -29,7 +59,7 @@ public class PlayerShooter : MonoBehaviour
 		{
 			if(gun.Reload())
 			{
-				animator.SetTrigger(idReload);
+				animator.SetTrigger(Defines.hashReload);
 			}
 		}
 	}
@@ -49,5 +79,11 @@ public class PlayerShooter : MonoBehaviour
 
 		animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandMount.position);
 		animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandMount.rotation);
+	}
+
+	public void AddAmmo(int ammo)
+	{
+		gun.AddAmmoRemain(ammo);
+		audioSource.PlayOneShot(itemPickupClip);
 	}
 }
