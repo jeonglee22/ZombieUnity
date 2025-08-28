@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7514220149759850053}
   - component: {fileID: 4034741109036595587}
   - component: {fileID: 4123459952942485454}
+  - component: {fileID: 7236259166920836834}
   m_Layer: 0
   m_Name: ItemHeart
   m_TagString: Untagged
@@ -69,6 +70,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.48666286, y: 0.5863759, z: 0.7230196}
   m_Center: {x: -0.0018467903, y: 0.49487165, z: 0.0018465519}
+--- !u!114 &7236259166920836834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7455056271651635798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4beedafb2b4d52e4692594c65b5e56bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 50
+  moveSpeed: 0.2
+  moveTop: 0.5
+  moveBottom: 0
 --- !u!1001 &1105714393061330705
 PrefabInstance:
   m_ObjectHideFlags: 0

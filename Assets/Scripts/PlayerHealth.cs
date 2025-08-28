@@ -15,8 +15,6 @@ public class PlayerHealth : LivingEntity
     private PlayerMovement movement;
     private PlayerShooter shooter;
 
-    private GameManager gameManager;
-
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -24,11 +22,6 @@ public class PlayerHealth : LivingEntity
         movement = GetComponent<PlayerMovement>();
         shooter = GetComponent<PlayerShooter>();
     }
-
-	private void Start()
-	{
-        gameManager = GameObject.FindWithTag(Defines.UiControllerTag).GetComponent<GameManager>();
-	}
 
 	protected override void OnEnable()
     {
@@ -76,7 +69,5 @@ public class PlayerHealth : LivingEntity
 
         movement.enabled = false;
         shooter.enabled = false;
-
-        gameManager.GameOver();
     }
 }

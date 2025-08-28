@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour, IItem
 {
+	private GameManager manager;
+
 	public enum Types
 	{
 		Coin,
@@ -11,6 +13,11 @@ public class Item : MonoBehaviour, IItem
 
 	public Types itemType;
 	public int value = 10;
+
+	private void Start()
+	{
+		manager = GameObject.FindWithTag(Defines.gameControllerTag).GetComponent<GameManager>();
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -28,7 +35,7 @@ public class Item : MonoBehaviour, IItem
 		{
 			case Types.Coin:
 			{
-
+				manager.AddScore(value);
 			}
 			break;
 			case Types.Health:

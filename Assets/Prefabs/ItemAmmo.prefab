@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 985619797899438656}
   - component: {fileID: 9113903976411615805}
   - component: {fileID: 2169357741040774191}
+  - component: {fileID: 8639429268796888948}
   m_Layer: 0
   m_Name: ItemAmmo
   m_TagString: Untagged
@@ -69,6 +70,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.22291017, y: 0.61927, z: 0.25558794}
   m_Center: {x: 0.0037320852, y: 0.49722198, z: -0.0028412938}
+--- !u!114 &8639429268796888948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574799616814761925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4beedafb2b4d52e4692594c65b5e56bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 50
+  moveSpeed: 0.2
+  moveTop: 0.5
+  moveBottom: 0
 --- !u!1001 &1577741113195934766
 PrefabInstance:
   m_ObjectHideFlags: 0

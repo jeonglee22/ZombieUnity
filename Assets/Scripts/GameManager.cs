@@ -11,6 +11,7 @@ public static class Defines
 
 	public static readonly string playerTag = "Player";
 	public static readonly string UiControllerTag = "UIController";
+	public static readonly string gameControllerTag = "GameController";
 
 	public static readonly int hashMove = Animator.StringToHash("Move");
 
@@ -22,59 +23,41 @@ public static class Defines
 
 public class GameManager : MonoBehaviour
 {
-    public Text ammoText;
-	public Text scoreText;
-	public Text enemyWaveText;
-
-	public GameObject gameoverUI;
+	public UIManager uiManager;
 
     private GameObject player;
 
+	public ZombieSpawner zombieSpawner;
+	public ItemSpawner itemSpawner;
+
 	private bool isGameOver;
 
-	private float score;
+	private int score;
 
 	private void Start()
 	{
 		player = GameObject.FindWithTag(Defines.playerTag);
-		isGameOver = false;
-		score = 0;
-		gameoverUI.SetActive(false);
+		var playerHealth = player.GetComponent<PlayerHealth>();
+		if(playerHealth != null )
+		{
+			playerHealth.OnDeath += () => GameOver();
+		}
+		uiManager.SetActiveGameOverUI(false);
+		itemSpawner.gameObject.SetActive(true);
+		zombieSpawner.gameObject.SetActive(true);
 	}
 
-	private void Update()
+	public void AddScore(int score)
 	{
-		if (isGameOver)
-			return;
-
-		SetAmmoText();
-		SetScoreText();
-	}
-
-	private void SetAmmoText()
-	{
-		var ammoTextSb = new StringBuilder();
-		ammoTextSb.Append(player.GetComponent<PlayerShooter>().gun.MagAmmo).Append('/');
-		ammoTextSb.Append(player.GetComponent<PlayerShooter>().gun.AmmoRemain);
-		ammoText.text = ammoTextSb.ToString();
-	}
-
-	private void SetScoreText()
-	{
-		score += Time.deltaTime;
-		scoreText.text = $"Score : {Mathf.FloorToInt(score)}";
+		this.score += score;
+		uiManager.SetScore(this.score);
 	}
 
 	public void GameOver()
 	{
-		gameoverUI.SetActive(true);
+		uiManager.SetActiveGameOverUI(true);
+		itemSpawner.gameObject.SetActive(false);
+		zombieSpawner.gameObject.SetActive(false);
 		isGameOver = true;
-	}
-
-	public void GameRestart()
-	{
-		isGameOver = false;
-		gameoverUI.SetActive(false);
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }

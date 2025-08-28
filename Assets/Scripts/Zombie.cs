@@ -64,6 +64,8 @@ public class Zombie : LivingEntity
 
 	public ParticleSystem bloodEffect;
 
+	public Renderer zombeiRenderer;
+
 	private void Awake()
 	{
 		agent = GetComponent<NavMeshAgent>();
@@ -190,5 +192,14 @@ public class Zombie : LivingEntity
 		var target = colliders.OrderBy(
 			x => Vector3.Distance(x.transform.position, transform.position)).First();
 		return target.transform;
+	}
+
+	public void SetUp(ZombieData data)
+	{
+		MaxHealth = data.maxHP;
+		damage = data.damage;
+
+		agent.speed = data.speed;
+		zombeiRenderer.material.color = data.skinColor;
 	}
 }
